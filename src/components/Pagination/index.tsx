@@ -1,7 +1,20 @@
-import { Box, Button, Stack } from "@chakra-ui/react";
+import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import { PaginationItem } from "./PaginationItem";
 
-export function Pagination(){
+interface PaginationProps{
+    totalCountOfRegisters:number;
+    registerPerPage?:number;
+    currentPage?:number;
+    onPageChange:(page:number)=>void
+}
+
+
+export function Pagination({totalCountOfRegisters,registerPerPage=10,currentPage=1,onPageChange}:PaginationProps){
+
+    const lastPage=Math.ceil(totalCountOfRegisters/registerPerPage)
+    /*Essa constante é o total de registro dividido pelo número de registros,
+     arrendondada pra cima*/
+
     return(
         <Stack 
         direction={["column", "row"]}
@@ -16,10 +29,17 @@ export function Pagination(){
         <Stack 
         direction="row"
         >
-        <PaginationItem number={1} isCurrent/>
-        <PaginationItem number={2} />
-        <PaginationItem number={3} />
-        <PaginationItem number={4} />
+            {   
+                <>  
+                    {(currentPage>3) && (<PaginationItem onPageChange={onPageChange} number={1}/>)} 
+                    {(currentPage>3) && (<Text>...</Text>)}
+                    {(currentPage>1) && (<PaginationItem onPageChange={onPageChange} number={currentPage-1}/>)}
+                    <PaginationItem onPageChange={onPageChange} isCurrent number={currentPage}/>
+                    {(currentPage<lastPage-1) && (<PaginationItem onPageChange={onPageChange} number={currentPage+1}/>)}
+                    {(currentPage<lastPage-2) && (<Text>...</Text>)}
+                    {(currentPage!=lastPage) && (<PaginationItem onPageChange={onPageChange} number={lastPage}/>)}
+                </>
+            }
         </Stack>
         </Stack>
     )
