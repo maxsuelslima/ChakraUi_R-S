@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { api } from "../services/authApi";
 
 
@@ -20,19 +20,19 @@ export const AuthContext=createContext({} as AuthContextData)
 
 export function AuthProvider({children}){
     const isAuthenticated=false;
-
+    const [response,setResponse]=useState()
+    useEffect(()=>{console.log(response)},[response])
     async function signIn({email,password }:SignInCredential){
         try{
-            console.log('sucess')
-            const response = await api.post('sessions',{
+            const respons = await api.post('sessions',{
                 email,
-                password
-            })
-            console.log(response)
+                password})
+                setResponse(response)
         }catch(err){
             console.log(err)
             console.log('error')
         }
+        console.log(response)
     }
 
     return(
